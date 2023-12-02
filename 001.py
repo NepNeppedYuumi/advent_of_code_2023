@@ -4,6 +4,7 @@ with open('001.txt', 'r') as file:
     lines = []
     for line in file:
         line2 = ''
+        line = line.replace('one', 'one1one')
         for i in range(0, len(line)):
             if line[i].isnumeric():
                 line2 += line[i]
