@@ -3,6 +3,7 @@ from functools import reduce
 COLOURS = ['red', 'green', 'blue']
 COLOUR_VALUES = [12, 13, 14]
 
+# part 1
 with open('002.txt', 'r') as file:
     total = 0
     for game in file:
@@ -20,6 +21,8 @@ with open('002.txt', 'r') as file:
             continue
         total += int(game_id.split(' ')[-1])
 print(total)
+
+# part 2
 
 with open('002.txt', 'r') as file:
     total = 0
