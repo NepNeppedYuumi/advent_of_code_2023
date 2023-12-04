@@ -1,10 +1,6 @@
 from re import finditer
 
 
-def end_of_loop():
-    raise StopIteration
-
-
 def parser(file="input.txt"):
     with open(file, 'r') as file:
         data = file.read().split('\n')
