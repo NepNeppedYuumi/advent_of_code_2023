@@ -1,34 +1,35 @@
-#
-#
-# # part 1
-# with open('005.txt', 'r') as file:
-#     seeds = file.readline().split(": ")[1].rstrip().split(' ')
-#     seeds = list(map(int, seeds))
-#     print(seeds)
-#     instructions = file.read().strip().split("\n\n")
-#     for i in instructions:
-#         i = i.split("\n")
-#         i_name = i[0]
-#         new_seeds = []
-#         maps = []
-#         for new, old, length in map(str.split, i[1:]):
-#             new, old, length = int(new), int(old), int(length)
-#             ra = (old - new, old, old + length)
-#             maps.append(ra)
-#         for seed in seeds[:]:
-#             for diff, start, stop in maps:
-#                 if seed in range(start, stop):
-#                     new_seeds.append(seed - diff)
-#                     seeds.remove(seed)
-#         seeds.extend(new_seeds)
-#         print(seeds)
-#     print()
-#     print(seeds)
-#     print(min(seeds))
 from datetime import datetime
 
+
+# part 1
+with open('005.txt', 'r') as file:
+    seeds = file.readline().split(": ")[1].rstrip().split(' ')
+    seeds = list(map(int, seeds))
+    print(seeds)
+    instructions = file.read().strip().split("\n\n")
+    for i in instructions:
+        i = i.split("\n")
+        i_name = i[0]
+        new_seeds = []
+        maps = []
+        for new, old, length in map(str.split, i[1:]):
+            new, old, length = int(new), int(old), int(length)
+            ra = (old - new, old, old + length)
+            maps.append(ra)
+        for seed in seeds[:]:
+            for diff, start, stop in maps:
+                if seed in range(start, stop):
+                    new_seeds.append(seed - diff)
+                    seeds.remove(seed)
+        seeds.extend(new_seeds)
+        print(seeds)
+    print()
+    print(seeds)
+    print(min(seeds))
+
+
 # part 2
-with open('day05.txt', 'r') as file:
+with open('005.txt', 'r') as file:
     seeds = file.readline().split(": ")[1].rstrip().split(' ')
     seeds = list(map(int, seeds))
     lowest = []
@@ -86,8 +87,10 @@ with open('day05.txt', 'r') as file:
                     # print(change_map, diff, seed_range)
                     this_start = current_range.index(change_map[0])
                     seed_range.append(current_range[:this_start])
-                    seed_range.append(current_range[this_start+length:])
-                    new_ranges.append(current_range[this_start:this_start+length])
+                    seed_range.append(current_range[this_start+len(change_map):])
+                    range_slice = current_range[this_start:this_start+len(change_map)]
+                    new_ranges.append(range(range_slice[0] - diff, range_slice[-1] - diff)
+                        )
                     seed_range.pop(current_index)
                     current_index -= 1
 
