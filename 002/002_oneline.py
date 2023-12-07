@@ -22,7 +22,8 @@ print(sum(
 # col1 = "12"
 # col2 = "rood"
 
-print(sum(map(lambda x:int(x[0].split(' ')[-1]) if not any((True for col in x[1].replace(';', ',').split(', ') if (12, 13, 14)[('red', 'green', 'blue').index(col.split(' ')[-1])] < int(col.split(' ')[0])))else 0,map(lambda x: x.strip().split(': '), open('002.txt', 'r')))))
+print(sum(map(lambda x:int(x[0].split(' ')[-1]) if not any((True for col in x[1].replace(';', ',').split(', ') if (12, 13, 14)[('red', 'green', 'blue').index(col.split(' ')[-1])] < int(col.split(' ')[0])))else 0, map(lambda x: x.strip().split(': '), open(
+    '002.txt', 'r')))))
 
 
 # pièrre's solution
@@ -31,7 +32,7 @@ print(sum(
     int(g.split(' ')[1])
     for g,r in
     (l.strip().split(': ')
-     for l in open('input.txt'))
+     for l in open('../007/007.txt'))
     if all({"red":13,"green":14,"blue":15}.get(
         c.split(' ')[1], 0) > int(c.split(' ')[0]
                                ) for s in r.split("; ")

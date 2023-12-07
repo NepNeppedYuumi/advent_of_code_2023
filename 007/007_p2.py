@@ -1,6 +1,7 @@
 from collections import Counter
 
 
+# part 2
 class Hand:
     def __init__(self, cards: str, bid: int):
         self.cards = cards
@@ -44,7 +45,7 @@ class Hand:
 
 
 # part 2
-with open('input.txt', 'r') as file:
+with open('007.txt', 'r') as file:
     data = []
     for line in file:
         hand, bid = line.strip().split()
@@ -60,7 +61,7 @@ print(total)
 
 exit()
 # part 2
-with open('input.txt', 'r') as file:
+with open('007.txt', 'r') as file:
     data = []
     for line in file:
         hand, bid = line.strip().split()

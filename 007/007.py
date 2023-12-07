@@ -1,7 +1,7 @@
 from collections import Counter
 
 # part 1
-with open('input.txt', 'r') as file:
+with open('007.txt', 'r') as file:
     data = []
     for line in file:
         hand, bid = line.strip().split()
