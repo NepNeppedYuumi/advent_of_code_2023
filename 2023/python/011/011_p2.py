@@ -37,6 +37,7 @@ def p2(data, increase=1000000):
         diffx, diffy = ax - bx, ay - by
         total += abs(diffx) + abs(diffy)
     print(total)
+    print(len(combi), len(coords))
     return total
 
 
