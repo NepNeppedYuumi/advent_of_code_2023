@@ -1,3 +1,6 @@
+from datetime import datetime
+
+startTime = datetime.today()
 
 
 def parser(file_name="input.txt"):
@@ -30,15 +33,16 @@ def p1(data):
         if start:
             break
     sx, sy = start
-    frontier = [(sx -1, sy), (sx + 1, sy), (sx, sy -1), (sx, sy +1)]
+    frontier = [(sx -1, sy), (sx + 1, sy), (sx, sy - 1), (sx, sy + 1)]
     sets = []
-    # print(start)
-    # print(frontier)
+    dictionary = {}
+
+    complete = False
     for i, j in frontier:
         connect_set = {start, (i, j)}
         sets.append(connect_set)
         stack = [(i, j)]
-        # print((i, j))
+
         while True:
             current_len = len(connect_set)
             current_coords = stack.pop(-1)
@@ -49,35 +53,85 @@ def p1(data):
             first, second = connections[data[x][y]]
             if first is None or second is None:
                 if first is None and second is not None:
-                    a, b = (x, y+second[0]), (x, y+second[1])
+                    a, b = (x, y + second[0]), (x, y + second[1])
                 else:
                     a, b = (x + first[0], y), (x + first[1], y)
             else:
-                a, b = (x+first, y), (x, y+second)
+                a, b = (x + first, y), (x, y + second)
             if a not in connect_set:
                 stack.append(a)
             if b not in connect_set:
                 stack.append(b)
+            dictionary[current_coords] = (a, b)
             connect_set.add(a)
             connect_set.add(b)
             if len(connect_set) - current_len == 2 and current_len != 1:
-                # print("hi")
-                # print(connect_set, len(connect_set))
-                # print(current_coords, a, b)
                 connect_set.clear()
+                dictionary.clear()
                 break
             if len(connect_set) - current_len == 0:
+                complete = True
                 break
-        # print(connect_set)
-        # print(len(connect_set))
-    # print(sets)
+        if complete:
+            dictionary[start] = tuple(
+                key for key, item in dictionary.items() if start in item)
+            break
+
     loop = [element for element in sets if len(element) != 0][0]
-    escape_set = set()
+    walls = set().union(loop)
+    subspaces = set()
+    to_escape = []
+    string = ''
     for i, line in enumerate(data):
         for j, char in enumerate(line):
-            if char != '.':
-                continue
-    return distance
+            subspaces.add((i + 0.5, j + 0.5))
+            if (i, j) not in loop:
+                subspaces.add((i, j))
+                to_escape.append((i, j))
+            for d in (-1, 1):
+                if (i, j) not in dictionary.get((i + d, j), ()):
+                    subspaces.add((i + (d / 2), j))
+                else:
+                    walls.add((i + (d / 2), j))
+                if (i, j) not in dictionary.get((i, j + d), ()):
+                    subspaces.add((i, j + (d / 2)))
+                else:
+                    walls.add((i, j + (d / 2)))
+        string += '\n'
+
+    escaped = set()
+    not_escapable = set()
+    not_escaped = []
+    height, width = len(data), len(data[0])
+    print("time passed:", datetime.now() - startTime)
+    for coord in to_escape:
+        checked = {coord}
+        frontier = [coord]
+        while frontier:
+            current = frontier.pop()
+            cy, cx = current
+            if (cy == -1 or cy == height
+                    or cx == -1 or cx == width):
+                break
+            # if (current in escaped
+            #         or cy == -1 or cy == height
+            #         or cx == -1 or cx == width):
+            #     escaped.union(checked)
+            #     break
+            # if current in not_escapable:
+            #     not_escapable.union(checked)
+            #     not_escaped.append(coord)
+            #     break
+            for ny in (-0.5, 0, 0.5):
+                for nx in (-0.5, 0, 0.5):
+                    new = (cy + ny, cx + nx)
+                    if new not in checked and new not in walls:
+                        frontier.append(new)
+                        checked.add(new)
+        else:
+            # not_escapable.union(checked)
+            not_escaped.append(coord)
+    return len(not_escaped)
 
 
 test_data = parser("010_test3.txt")
@@ -85,6 +139,18 @@ assert p1(test_data) == 4
 test_data = parser("test4")
 assert p1(test_data) == 4
 test_data = parser("test5")
+assert p1(test_data) == 10
+test_data = parser("test6")
 assert p1(test_data) == 8
+startTime = datetime.now()
 actual_data = parser()
 print(p1(actual_data))
+print(datetime.now() - startTime)
+# test_data = parser("010_test3.txt")
+# p1(test_data) == 4
+# test_data = parser("test4")
+# p1(test_data) == 4
+# test_data = parser("test5")
+# p1(test_data) == 10
+# test_data = parser("test6")
+# p1(test_data) == 8
