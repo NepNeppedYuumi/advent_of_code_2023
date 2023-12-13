@@ -15,47 +15,31 @@ def parser(file_name="input.txt"):
     return data
 
 
-def permutationss(values, row, n=0):
-    if values and values[0]:
-        current, *other = values
-        for i in range(len(row) - sum(other) - len(other) + 1 - current):
-            if 1 not in row[i:i + current]:
-                for j in permutationss(other, row[i + current + 1:], 1):
-                    yield [1] * (i + n) + [2] * current + j
-    else:
-        yield []
-
-
 def sub(vars):
     i, (line, counts) = vars
-    line = '?'.join([line]*5).strip('.')
-    counts = counts*5
-    dic = {'?':0, '.': 1, '#':2}
-    row = [dic[char] for char in line]
     unknown, broken = line.count('?'), line.count('#')
     total_broken = sum(counts)
     un_br, un_nbr = total_broken - broken, unknown - (total_broken - broken)
     fill_str = '#' * un_br + '.' * un_nbr
     current = 0
-    # if line.count('.') == 0:
-    #     print(f"skipping {i}")
-    # else:
-    for permutation in map(lambda x: x +[1] * (len(row) - len(x)), permutationss(counts, row)):
-        # print(permutation)
-        # permutation += [1] * (len(row) - len(permutation))
-        # print(permutation)
-        for n1, n2 in zip(row, permutation):
-            if n1 > 0 and n1 != n2:
-                break
-        else:
+    fill_perms = distinct_permutations(fill_str, len(fill_str))
+    for perm in fill_perms:
+        new_str = list(line)
+        char_index = 0
+        for j in range(len(new_str)):
+            if new_str[j] == '?':
+                new_str[j] = perm[char_index]
+                char_index += 1
+        chains = [len(seq) for seq in ''.join(new_str).split('.') if seq != '']
+        if chains == counts:
             current += 1
-    print(i, current)
+    print(i)
     return current
 
 
 def p1(data):
     total = 0
-    with Pool(processes=1) as pool:
+    with Pool(processes=50) as pool:
         results = pool.map(sub, enumerate(data, start=1))
 
     total = sum(results)
@@ -65,7 +49,7 @@ def p1(data):
 
 def main():
     test_data = parser("012_test.txt")
-    assert p1(test_data) == 18901
+    assert p1(test_data) == 21
     actual_data = parser()
     print(p1(actual_data))
 

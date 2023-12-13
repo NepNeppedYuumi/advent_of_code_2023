@@ -97,7 +97,12 @@ def p1(data):
                     subspaces.add((i, j + (d / 2)))
                 else:
                     walls.add((i, j + (d / 2)))
-        string += '\n'
+    string = ''
+    for i in range(len(data) * 2):
+        for j in range(len(data[0]) * 2):
+            if (i, j) in walls:
+                string += '#'
+
 
     escaped = set()
     not_escapable = set()
