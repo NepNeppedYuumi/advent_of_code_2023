@@ -1,3 +1,9 @@
+from functools import cache
 
 
-print(1000000000 - 24894931)
+@cache
+def func(thing):
+    return thing[1]
+
+
+func({1, 2, 3})
