@@ -20,7 +20,7 @@ def p2(data):
                 diff = new_sequences[-1][j+1] - sseq
                 to_append.append(diff)
             new_sequences.append(to_append)
-        print(new_sequences)
+
         new_sequences[-1].insert(0, 0)
         for j, rseq in enumerate(new_sequences[-2::-1], start=2):
             new_num = rseq[0] - new_sequences[-j+1][0]

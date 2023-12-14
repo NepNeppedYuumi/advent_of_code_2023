@@ -20,6 +20,7 @@ def perm(current_row, row, counts):
     if len(current_row) == 0:
         return 1
 
+
 def permutationss(values, row, n=0):
     if values and values[0]:
         current, *other = values
