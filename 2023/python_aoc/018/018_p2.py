@@ -47,7 +47,6 @@ def p1(data):
         color = color.strip('()#')
         steps, direction = color[:-1], color[-1]
         steps = int(steps, 16)
-        steps = int(steps)
         dx, dy = directions[direction]
         x, y = x + steps * dx, y + steps * dy
         total_points += steps

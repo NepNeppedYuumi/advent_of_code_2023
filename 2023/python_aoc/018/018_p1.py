@@ -6,6 +6,31 @@ def parser(file_name="input.txt"):
         lines = file.read().splitlines()
     return lines
 
+import numpy as np
+def pathArea(path):
+    # Less than three points, and the area is zero.
+    if len(path) < 3:
+        return 0
+
+    A = 0.0
+    for i in range(0, len(path)):
+        A += path[i-1][0] * path[i][1] - path[i][0] * path[i-1][1]
+
+    return 0.5 * abs(A)
+
+
+def polygon_area(points):
+    """Return the area of the polygon whose vertices are given by the
+    sequence points.
+
+    """
+    area = 0
+    q = points[-1]
+    for p in points:
+        area += p[0] * q[1] - p[1] * q[0]
+        q = p
+    return area / 2
+
 
 def p1(data):
     directions = {
@@ -14,63 +39,20 @@ def p1(data):
         'D': (1, 0),
         'U': (-1, 0)
     }
-    points = {(0, 0)}
+    points = []
+    total_points = 0
     x, y = (0, 0)
     for line in data:
         direction, steps, color = line.split(' ')
+        steps = int(steps)
         dx, dy = directions[direction]
-        for _ in range(int(steps)):
-            x, y = x + dx, y + dy
-            points.add((x, y))
-    min_x = min(points, key =lambda x: x[0])[0]
-    max_x = max(points, key =lambda x: x[0])[0]
-    min_y = min(points, key=lambda x: x[1])[1]
-    max_y = max(points, key =lambda x: x[1])[1]
-    string = ''
-    for x in range(min_x, max_x + 1):
-        for y in range(min_y, max_y + 1):
-            if (x, y) in points:
-                string += '#'
-            else:
-                string += '.'
-        string += '\n'
-    # print(string)
-    # print(len(points))
-    # print(f"it is {(3, 0) in points}")
-    escaped = set()
-    not_escaped = set()
-    for x in range(min_x, max_x + 1):
-        for y in range(min_y, max_y + 1):
-            if (x, y) in points:
-                continue
-            seen = set()
-            stack = [(x, y)]
-            while stack:
-                cx, cy = stack.pop()
-                seen.add((cx, cy))
-                if cx < min_x or cx > max_x or cy < min_y or cy > max_y or (x, y) in escaped:
-                    escaped.union(seen)
-                    break
-                for dx, dy in directions.values():
-                    new = (cx + dx, cy + dy)
-                    if new in seen:
-                        continue
-                    if new not in points:
-                        stack.append(new)
-            else:
-                points.add((x, y))
-    string = ""
-    for x in range(min_x, max_x + 1):
-        for y in range(min_y, max_y + 1):
-            if (x, y) in points:
-                string += '#'
-            else:
-                string += '.'
-        string += '\n'
-    print(string)
-    print(len(points))
-    print("finished")
-    return len(points)
+        x, y = x + steps * dx, y + steps * dy
+        total_points += steps
+        points.append((x, y))
+    area = pathArea(points)
+    area = area + (total_points / 2) + 1
+    print(area)
+    return area
 
 
 test_data = parser("018_test.txt")
