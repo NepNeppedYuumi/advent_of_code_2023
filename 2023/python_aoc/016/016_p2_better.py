@@ -1,9 +1,7 @@
 from itertools import combinations
 from functools import cache
 import sys
-
-
-sys.setrecursionlimit(1000000)
+from enum import Enum
 
 
 def parser(file_name="input.txt"):
@@ -13,37 +11,10 @@ def parser(file_name="input.txt"):
     return lines
 
 
-@cache
-def move(position: tuple[int, int], direction: tuple[int, int]):
-    x, y = position
-    char = data[x][y]
-    if char == '.':
-        dx, dy = direction
-        return move((x + dx, y + dy), direction)
-    elif char == '/':
-        dx, dy = tuple(-1 * n for n in direction[::-1])
-        return move((x + dx, y + dy), (dx, dy))
-    elif char == '\\':
-        dx, dy = tuple(n for n in direction[::-1])
-        return move((x + dx, y + dy), (dx, dy))
-    elif char == '|':
-        dx, dy = direction
-        if dx == 0:
-            return move((x + 1, y), (1, 0)), move((x - 1, y), (-1, 0))
-        return move((x + dx, y + dy), direction)
-    elif char == '-':
-        dx, dy = direction
-        if dy == 0:
-            return move((x, y + 1), (0, 1)), move((x, y - 1), (0, -1))
-        return move((x + dx, y + dy), direction)
-    print("hi?")
-    raise BrokenPipeError
-
-
-def p1(data):
+def do_thing(data, start):
     points = set()
     combo = set()
-    stack = [((0, 0), (0, 1))]
+    stack = [start]
     while stack:
         position, direction = stack.pop()
         x, y = position
@@ -79,11 +50,32 @@ def p1(data):
                 stack.append(((x, y - 1), (0, -1)))
             else:
                 stack.append(((x + dx, y + dy), direction))
-    print(len(points))
     return len(points)
 
 
+
+def pre_process(data):
+    direct = {
+        '/': ((0, -1), (0,))
+    }
+
+
+
+def p1(data):
+    all_points = []
+    for i in range(0, len(data[0])):
+        all_points.append(do_thing(data, ((0, i), (1, 0))))
+    for i in range(0, len(data[0])):
+        all_points.append(do_thing(data, ((len(data)-1, i), (-1, 0))))
+    for i in range(0, len(data)):
+        all_points.append(do_thing(data, ((i, 0), (0, 1))))
+    for i in range(0, len(data)):
+        all_points.append(do_thing(data, ((i, len(data[0]) - 1), (0, -1))))
+    highest = max(all_points)
+    return highest
+
+
 test_data = parser("016_test.txt")
-assert p1(test_data) == 46
+assert p1(test_data) == 51
 actual_data = parser()
 print(p1(actual_data))
