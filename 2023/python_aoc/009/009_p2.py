@@ -25,7 +25,6 @@ def p2(data):
         for j, rseq in enumerate(new_sequences[-2::-1], start=2):
             new_num = rseq[0] - new_sequences[-j+1][0]
             rseq.insert(0, new_num)
-        print(new_sequences)
         total += new_sequences[0][0]
     return total
 
