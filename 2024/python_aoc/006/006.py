@@ -1,5 +1,6 @@
 from itertools import combinations
 from collections import defaultdict
+from time import time
 
 
 def parser(file_name="input.txt"):
@@ -14,6 +15,7 @@ def p1(data):
         if "^" in row:
             pos = (i, row.index("^"))
             break
+    
     
     visited = {pos}
     directions = ((-1, 0), (0, 1), (1, 0), (0, -1))
@@ -38,17 +40,17 @@ def p1(data):
 def p2(data):
     start_pos = None
     for i, row in enumerate(data):
+        data[i] = list(row)
         if "^" in row:
             start_pos = (i, row.index("^"))
-            break
     
     total = 0
     for i, row in enumerate(data):
         for j, col in enumerate(row):
             if col != ".":
                 continue
-            
-            data[i] = data[i][:j] + "#" + data[i][j + 1:]
+
+            data[i][j] = "#"
             
             pos = start_pos
             directions = ((-1, 0), (0, 1), (1, 0), (0, -1))
@@ -71,7 +73,7 @@ def p2(data):
                 
                 visited.add((pos, direction))
                 
-            data[i] = data[i][:j] + "." + data[i][j + 1:]
+            data[i][j] = "."
     
     print(total)
     return total
@@ -87,8 +89,10 @@ actual_data = parser()
 print(p1(actual_data))
 
 
+start = time()
 test_data = parser("006_test")
 assert p2(test_data) == 6
 actual_data = parser()
 print(p2(actual_data))
+print("time:", time() - start)
 
